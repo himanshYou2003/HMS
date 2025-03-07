@@ -1,0 +1,7 @@
+sudo mysql -u root -p
+mysql -u Himanshu -p -e "USE HMS; SHOW TABLES;"
+mysql -u Himanshu -p -e "USE HMS; SELECT * FROM Patient;"
+mysql -u Himanshu -p -e "USE HMS; SELECT * FROM Appointment;"
+ 
+ 
+ desc patient
