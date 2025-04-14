@@ -36,8 +36,6 @@ A secure and scalable registration system for medical professionals and patients
 - Node.js / Express.js
 - MySQL
 - Bcrypt.js
-- SendGrid
-- UUID
 - JWT
 
 **Frontend:**
@@ -52,10 +50,8 @@ A secure and scalable registration system for medical professionals and patients
 ### Prerequisites
 - Node.js v18+
 - MySQL 8.0+
-- SendGrid API key
-- Redis (for rate limiting)
 
 1. **Clone Repository**
    ```bash
-   git clone https://github.com/yourusername/medregistrar.git
-   cd medregistrar
+   git clone https://https://github.com/himanshYou2003/HMS.git
+   cd HMS
