@@ -1,3 +1,4 @@
+//backend/app.js
 require('dotenv').config();
 const createError = require('http-errors');
 const express = require('express');
@@ -6,12 +7,17 @@ const app = express();
 
 
 // Middleware
+// backend/app.js
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Routes
-app.use('/api/patients', require('./routes/patients'));
+app.use('/api/patient', require('./routes/patients'));
+app.use('/api/diagnosis', require('./routes/diagnosis'));
+app.use('/api/masters', require('./routes/master'));
+app.use('/api/schedule', require('./routes/schedule'));
 app.use('/api/doctors', require('./routes/doctors'));
 app.use('/api/appointments', require('./routes/appointments'));
 app.use('/api/medical-history', require('./routes/medicalHistory'));

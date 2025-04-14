@@ -1,7 +1,18 @@
 sudo mysql -u root -p
 mysql -u Himanshu -p -e "USE HMS; SHOW TABLES;"
 mysql -u Himanshu -p -e "USE HMS; SELECT * FROM Patient;"
+mysql -u Himanshu -p -e "USE HMS; SELECT * FROM Doctor;"
+mysql -u Himanshu -p -e "USE HMS; SELECT * FROM Diagnosis;"
 mysql -u Himanshu -p -e "USE HMS; SELECT * FROM Appointment;"
  
  
  desc patient
+
+
+role-patient
+email-himanshukumar935437@gmail.com
+password=1234567890
+
+role-doctor
+email-mamta@gmail.com
+password=1234567890

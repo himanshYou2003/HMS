@@ -1,3 +1,4 @@
+//backend/databse.js
 const mysql = require('mysql');
 require('dotenv').config();
 

@@ -1,86 +1,119 @@
+--backend/DDL.sql
+
+-- Enhanced Hospital Management System (HMS) Schema
 CREATE DATABASE IF NOT EXISTS HMS;
 USE HMS;
 
-CREATE TABLE IF NOT EXISTS Patient(
-email varchar(50) PRIMARY KEY,
-password varchar(30) NOT NULL,
-name varchar(50) NOT NULL,
-address varchar(60) NOT NULL,
-gender VARCHAR(20) NOT NULL
+-- Master Tables for Location Data
+CREATE TABLE IF NOT EXISTS Master_state (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    state VARCHAR(255) NOT NULL,
+    is_enable ENUM('true', 'false') DEFAULT 'true',
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS MedicalHistory(
-id int PRIMARY KEY AUTO_INCREMENT, 
-date DATE NOT NULL,
-conditions VARCHAR(100) NOT NULL, 
-surgeries VARCHAR(100) NOT NULL, 
-medication VARCHAR(100) NOT NULL
+CREATE TABLE IF NOT EXISTS Master_city (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    state_id INT NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    is_enable ENUM('true', 'false') DEFAULT 'true',
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (state_id) REFERENCES Master_state(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Doctor(
-email varchar(50) PRIMARY KEY,
-gender varchar(20) NOT NULL,
-password varchar(30) NOT NULL,
-name varchar(50) NOT NULL
+-- Enhanced Patient Table
+CREATE TABLE IF NOT EXISTS Patient (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(60) NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    street_address VARCHAR(100) NOT NULL,
+    city_id INT NOT NULL,
+    state_id INT NOT NULL,
+    pin_code CHAR(6) NOT NULL,
+    gender ENUM('male', 'female', 'other') NOT NULL,
+    is_enable ENUM('true', 'false') DEFAULT 'true',
+    registered_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (city_id) REFERENCES Master_city(id),
+    FOREIGN KEY (state_id) REFERENCES Master_state(id)
 );
 
-CREATE TABLE IF NOT EXISTS Appointment(
-id int PRIMARY KEY AUTO_INCREMENT,
-date DATE NOT NULL,
-starttime TIME NOT NULL,
-endtime TIME NOT NULL,
-status varchar(15) NOT NULL
+-- Enhanced Medical History
+CREATE TABLE IF NOT EXISTS MedicalHistory (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    patient_id INT NOT NULL,
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    conditions TEXT NOT NULL,
+    surgeries TEXT NOT NULL,
+    medications TEXT NOT NULL,
+    notes TEXT,
+    is_enable ENUM('true', 'false') DEFAULT 'true',
+    FOREIGN KEY (patient_id) REFERENCES Patient(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS PatientsAttendAppointments(
-patient varchar(50) NOT NULL,
-appt int NOT NULL,
-concerns varchar(40) NOT NULL,
-symptoms varchar(40) NOT NULL,
-FOREIGN KEY (patient) REFERENCES Patient (email) ON DELETE CASCADE,
-FOREIGN KEY (appt) REFERENCES Appointment (id) ON DELETE CASCADE,
-PRIMARY KEY (patient, appt)
+-- Enhanced Doctor Table
+CREATE TABLE IF NOT EXISTS Doctor (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(60) NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    specialization VARCHAR(100) NOT NULL,
+    gender ENUM('male', 'female', 'other') NOT NULL,
+    is_enable ENUM('true', 'false') DEFAULT 'true',
+    registered_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS Schedule(
-id int NOT NULL,
-starttime TIME NOT NULL,
-endtime TIME NOT NULL,
-breaktime TIME NOT NULL,
-day varchar(20) NOT NULL,
-PRIMARY KEY (id, starttime, endtime, breaktime, day)
+-- Enhanced Appointment System
+CREATE TABLE IF NOT EXISTS Appointment (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    patient_id INT NOT NULL,
+    doctor_id INT NOT NULL,
+    date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    status ENUM('scheduled', 'completed', 'canceled') NOT NULL,
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CHECK (end_time > start_time),
+    FOREIGN KEY (patient_id) REFERENCES Patient(id) ON DELETE CASCADE,
+    FOREIGN KEY (doctor_id) REFERENCES Doctor(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS PatientsFillHistory(
-patient varchar(50) NOT NULL,
-history int NOT NULL,
-FOREIGN KEY (patient) REFERENCES Patient (email) ON DELETE CASCADE,
-FOREIGN KEY (history) REFERENCES MedicalHistory (id) ON DELETE CASCADE,
-PRIMARY KEY (history)
+-- Enhanced Schedule System
+CREATE TABLE IF NOT EXISTS Schedule (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    doctor_id INT NOT NULL,
+    day_of_week ENUM('mon','tue','wed','thu','fri','sat','sun') NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    break_start TIME,
+    break_end TIME,
+    is_enable ENUM('true', 'false') DEFAULT 'true',
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CHECK (end_time > start_time),
+    CHECK (break_end > break_start),
+    FOREIGN KEY (doctor_id) REFERENCES Doctor(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Diagnose(
-appt int NOT NULL,
-doctor varchar(50) NOT NULL,
-diagnosis varchar(40) NOT NULL,
-prescription varchar(50) NOT NULL,
-FOREIGN KEY (appt) REFERENCES Appointment (id) ON DELETE CASCADE,
-FOREIGN KEY (doctor) REFERENCES Doctor (email) ON DELETE CASCADE,
-PRIMARY KEY (appt, doctor)
+-- Enhanced Diagnostic System
+CREATE TABLE IF NOT EXISTS Diagnosis (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    appointment_id INT NOT NULL,
+    doctor_id INT NOT NULL,
+    diagnosis TEXT NOT NULL,
+    prescription TEXT NOT NULL,
+    notes TEXT,
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (appointment_id) REFERENCES Appointment(id) ON DELETE CASCADE,
+    FOREIGN KEY (doctor_id) REFERENCES Doctor(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS DocsHaveSchedules(
-sched int NOT NULL,
-doctor varchar(50) NOT NULL,
-FOREIGN KEY (sched) REFERENCES Schedule (id) ON DELETE CASCADE,
-FOREIGN KEY (doctor) REFERENCES Doctor (email) ON DELETE CASCADE,
-PRIMARY KEY (sched, doctor)
-);
-
-CREATE TABLE IF NOT EXISTS DoctorViewsHistory(
-history int NOT NULL,
-doctor varchar(50) NOT NULL,
-FOREIGN KEY (doctor) REFERENCES Doctor (email) ON DELETE CASCADE,
-FOREIGN KEY (history) REFERENCES MedicalHistory (id) ON DELETE CASCADE,
-PRIMARY KEY (history, doctor)
+-- Audit Table for History Access
+CREATE TABLE IF NOT EXISTS HistoryAccessLog (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    doctor_id INT NOT NULL,
+    patient_id INT NOT NULL,
+    access_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    action_type ENUM('view', 'update') NOT NULL,
+    FOREIGN KEY (doctor_id) REFERENCES Doctor(id) ON DELETE CASCADE,
+    FOREIGN KEY (patient_id) REFERENCES Patient(id) ON DELETE CASCADE
 );

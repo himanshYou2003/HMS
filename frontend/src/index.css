@@ -1,0 +1,22 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors;
+  }
+  .btn-primary {
+    @apply btn bg-primary-oceanTeal text-white hover:bg-primary-sageGreen focus:ring-accent-deepPlum disabled:opacity-50;
+  }
+  .btn-secondary {
+    @apply btn bg-accent-beige text-accent-deepPlum hover:bg-neutral-lightGray focus:ring-primary-oceanTeal disabled:opacity-50;
+  }
+  .input {
+    @apply mt-1 block w-full px-3 py-2 bg-white border border-neutral-lightGray rounded-md shadow-sm focus:outline-none focus:ring-primary-oceanTeal focus:border-primary-sageGreen;
+  }
+  .label {
+    @apply block text-sm font-medium text-neutral-offBlack;
+  }
+}
