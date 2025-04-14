@@ -73,7 +73,7 @@ const PatientMedicalHistory = () => {
       {error ? (
         <ErrorAlert message={error} />
       ) : medicalHistory.length === 0 ? (
-        <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div className="bg-white text-gray-300 shadow overflow-hidden sm:rounded-lg">
           <div className="px-4 py-5 sm:p-6 text-center">
             <h3 className="text-lg leading-6 font-medium text-gray-900">No medical history found</h3>
             <div className="mt-2 max-w-xl text-sm text-gray-500 mx-auto">

@@ -197,7 +197,11 @@ const AppointmentForm = () => {
     <Layout>
       <div className="max-w-3xl mx-auto bg-accent-deepPlum rounded-xl shadow-lg overflow-hidden border-l-4 border-primary-oceanTeal">
         <div className="px-6 py-8 sm:p-8">
+<<<<<<< HEAD
           <h2 className="text-2xl font-bold text-accent-beige mb-8">Book an Appointment</h2>
+=======
+          <h2 className="text-2xl font-semibold text-accent-beige mb-8">Book an Appointment</h2>
+>>>>>>> 8ebe5c9 (styling)
           
           {error &&<ErrorAlert 
     message={error}
