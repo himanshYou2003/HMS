@@ -4,6 +4,9 @@
 [![Node.js](https://img.shields.io/badge/Node.js-18.x-green)](https://nodejs.org/)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-blue)](https://www.mysql.com/)
 
+![Project Image](frontend/public/project.jpg)
+
+
 A secure and scalable registration system for medical professionals and patients with email verification and authentication features.
 
 ## Features
