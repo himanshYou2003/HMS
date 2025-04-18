@@ -20,3 +20,6 @@
     @apply block text-sm font-medium text-neutral-offBlack;
   }
 }
+::selection {
+  background: rgba(155, 142, 121, 0.744);
+}

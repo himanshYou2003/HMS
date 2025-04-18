@@ -288,7 +288,7 @@ const AppointmentForm = () => {
                 >
                   <option value="">Select a day</option>
                   {schedules.map(schedule => (
-                    <option key={schedule.id} value={schedule.id} className="text-neutral-lightGray">
+                    <option key={schedule.id} value={schedule.id} className="bg-accent-deepPlum/10">
                       {daysOfWeek[schedule.day_of_week]} (
                       {new Date(`2000-01-01T${schedule.start_time}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - 
                       {new Date(`2000-01-01T${schedule.end_time}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})

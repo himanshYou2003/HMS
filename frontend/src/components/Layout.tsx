@@ -13,7 +13,7 @@ const Layout = ({ children }: LayoutProps) => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/');
   };
 
   console.log("Auth state:", { isAuthenticated, userType: user?.type });
@@ -100,7 +100,9 @@ const Layout = ({ children }: LayoutProps) => {
             <div className="flex items-center">
               {isAuthenticated ? (
                 <div className="flex items-center space-x-4">
-                  <span className="bg-accent-beige/70 p-8 rounded-full uppercase text-xl font-medium">Hi , {user?.name}</span>
+                  <span className="bg-accent-beige/70 p-8 rounded-full uppercase text-xl font-medium">
+        Hi, {user?.type === 'doctor' ? `Dr. ${user?.name}` : user?.name}
+      </span>
                   <button
                     onClick={handleLogout}
                     className="flex items-center gap-2 px-4 py-2 bg-accent-warmBrick text-white rounded-lg hover:bg-primary-sageGreen transition-colors"
